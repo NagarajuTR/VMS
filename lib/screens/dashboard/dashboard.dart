@@ -74,8 +74,14 @@ class _Dashboard extends State<Dashboard> {
                                 textSize: ConstSize.instance.textLarge,
                               ),
                               CustomText(
-                                text: DateFormat('dd/MM/yyyy hh:mm a')
-                                    .format(DateTime.now()),
+                                text: DateFormat('dd/MM/yyyy hh:mm a').format(
+                                  DateTime.now().add(
+                                    Duration(
+                                        days: index,
+                                        hours: index,
+                                        minutes: index),
+                                  ),
+                                ),
                                 textSize: ConstSize.instance.textLarge,
                               )
                             ],
