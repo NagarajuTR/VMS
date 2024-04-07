@@ -56,5 +56,6 @@ class ConstSize {
   double textSmall = 12.0;
   double textMedium = 14.0;
   double textLarge = 16.0;
+  double text24 = 24;
   double header = 30.0;
 }

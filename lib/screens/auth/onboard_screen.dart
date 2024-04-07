@@ -20,20 +20,25 @@ class OnboardScreenState extends State<OnboardScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              Expanded(child: Image.asset("assets/svg/onboard.png")),
+              const Expanded(
+                  child: Icon(
+                Icons.handshake,
+                color: Colors.white,
+                size: 140,
+              )),
               Text.rich(
                 textAlign: TextAlign.center,
                 TextSpan(
                   children: [
                     CustomTextSpan.instance.customTextSpan(
-                        text: "Join Bechdo, ",
+                        text: "Visitor's Management System, ",
                         color: Colors.white,
                         textSize: ConstSize.instance.header,
                         fontWeight: FontWeight.bold),
                     CustomTextSpan.instance.customTextSpan(
-                        text: "Discover Endless Benefits!",
+                        text: "Streamlining Entry and Exit Processes",
                         color: Colors.white,
-                        textSize: ConstSize.instance.header),
+                        textSize: ConstSize.instance.text24),
                   ],
                 ),
               ),
@@ -42,7 +47,7 @@ class OnboardScreenState extends State<OnboardScreen> {
               ),
               CustomText(
                 text:
-                    'Step into a vibrant community of buyers and sellers, where endless benefits await. Join us to discover great deals, declutter your space, and connect with others for a seamless marketplace experience.',
+                    'Enhances security, streamlines check-in/out, and monitors visitor activities efficiently.',
                 color: Colors.white,
                 textSize: ConstSize.instance.textLarge,
                 textAlign: TextAlign.center,

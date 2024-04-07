@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:visitors_management/screens/auth/onboard_screen.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
 
@@ -19,9 +18,13 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GradientBackground(
+    return const GradientBackground(
       child: Center(
-        child: SvgPicture.asset("assets/svg/splash_logo.svg"),
+        child: Icon(
+          Icons.handshake,
+          color: Colors.white,
+          size: 140,
+        ),
       ),
     );
   }
