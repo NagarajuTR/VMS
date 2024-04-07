@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
 
@@ -35,27 +35,35 @@ class LoginState extends State<Login> {
               children: [
                 const Expanded(
                   flex: 1,
-                  child: CustomTextFormField(
-                    hintText: "+91",
+                  child: Row(
+                    children: [
+                      CustomTextFormField(
+                        hintText: "+91",
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
-                  width: 1,
+                  width: 2,
                 ),
                 Expanded(
                   flex: 5,
-                  child: CustomTextFormField(
-                    hintText: "Enter your phone number",
-                    keyboardType: TextInputType.phone,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value.length == 10) {
-                          enableLogin = true;
-                        } else {
-                          enableLogin = false;
-                        }
-                      });
-                    },
+                  child: Row(
+                    children: [
+                      CustomTextFormField(
+                        hintText: "Enter your phone number",
+                        keyboardType: TextInputType.phone,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value.length == 10) {
+                              enableLogin = true;
+                            } else {
+                              enableLogin = false;
+                            }
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -76,14 +84,16 @@ class LoginState extends State<Login> {
             const SizedBox(
               height: 15,
             ),
-            InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => const Login()));
-                },
-                child: SvgPicture.asset('assets/svg/verify_disabled_btn.svg')),
+            CustomGradientButton(
+              onPressed: () {},
+              child: Text(
+                "Login",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: ConstSize.instance.textLarge,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
