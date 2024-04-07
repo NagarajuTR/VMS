@@ -2,69 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
-import 'package:visitors_management/screens/dashboard/visitors_list.dart';
+import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class VisitorsList extends StatefulWidget {
+  const VisitorsList({super.key});
 
   @override
-  State<StatefulWidget> createState() => _Dashboard();
+  State<StatefulWidget> createState() => _VisitorsListState();
 }
 
-class _Dashboard extends State<Dashboard> {
+class _VisitorsListState extends State<VisitorsList> {
   @override
   Widget build(BuildContext context) {
     return MainScreen(
-      appBar: AppBar(
-        title: const Text(
-          "Dashboard",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: const Text(
+            "Visitors List",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: ColorsConst.instance.blue,
+          centerTitle: true,
         ),
-        automaticallyImplyLeading: false,
-        backgroundColor: ColorsConst.instance.blue,
-        centerTitle: true,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
                 children: [
-                  CustomText(
-                    text: 'Visitors List',
-                    textSize: ConstSize.instance.text24,
-                    color: ColorsConst.instance.blue,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VisitorsList(),
-                        ),
-                      );
-                    },
-                    child: CustomText(
-                      text: 'View all',
-                      textSize: ConstSize.instance.textLarge,
-                      color: ColorsConst.instance.blue,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  CustomTextFormField(
+                    hintText: "Search visitor",
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
-              const Divider(),
-              const SizedBox(height: 5),
-              Expanded(
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: ListView.separated(
-                  itemCount: 5,
+                  itemCount: 25,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
@@ -122,10 +100,8 @@ class _Dashboard extends State<Dashboard> {
                   },
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          ],
+        ));
   }
 }
