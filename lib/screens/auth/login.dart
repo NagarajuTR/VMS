@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitors_management/screens/auth/otp_screen.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
@@ -85,7 +86,14 @@ class LoginState extends State<Login> {
               height: 15,
             ),
             CustomGradientButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const OTPScreen(
+                              number: '',
+                            )));
+              },
               child: Text(
                 "Login",
                 style: TextStyle(
