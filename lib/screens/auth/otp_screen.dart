@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
-import 'package:visitors_management/screens/home/home_screen.dart';
+import 'package:visitors_management/screens/dashboard/dashboard.dart';
 
 class OTPScreen extends StatefulWidget {
   final String number;
@@ -193,7 +193,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const HomeScreen()),
+                                  const Dashboard()),
                           ModalRoute.withName('/'));
                     },
                     child: Text(
