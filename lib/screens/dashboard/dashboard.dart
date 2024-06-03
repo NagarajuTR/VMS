@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:visitors_management/const/colors_const.dart';
+import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
-import 'package:visitors_management/screens/dashboard/visitors_list.dart';
+import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
 class Dashboard extends StatefulWidget {
@@ -25,101 +25,107 @@ class _Dashboard extends State<Dashboard> {
         backgroundColor: ColorsConst.instance.blue,
         centerTitle: true,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: GradientBackground(
+        colors: const [Color(0xFF3333ff), Color(0xFFe6e6e6)],
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 6),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CustomText(
-                    text: 'Visitors List',
-                    textSize: ConstSize.instance.text24,
-                    color: ColorsConst.instance.blue,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VisitorsList(),
-                        ),
-                      );
-                    },
-                    child: CustomText(
-                      text: 'View all',
-                      textSize: ConstSize.instance.textLarge,
-                      color: ColorsConst.instance.blue,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              const Divider(),
-              const SizedBox(height: 5),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(42),
-                                border: Border.all(
-                                    width: 3,
-                                    color: ColorsConst.instance.blue)),
-                            child: const Icon(
-                              Icons.account_circle_outlined,
-                              size: 60,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Wrap(
-                            direction: Axis.vertical,
-                            children: [
-                              CustomText(
-                                text: 'Arun yadav',
-                                textSize: ConstSize.instance.text24,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              CustomText(
-                                text: 'arunyadav@gmail.com',
-                                textSize: ConstSize.instance.textLarge,
-                              ),
-                              CustomText(
-                                text: DateFormat('dd/MM/yyyy hh:mm a').format(
-                                  DateTime.now().add(
-                                    Duration(
-                                        days: index,
-                                        hours: index,
-                                        minutes: index),
-                                  ),
-                                ),
-                                textSize: ConstSize.instance.textLarge,
-                              )
-                            ],
-                          ),
-                          const Spacer(),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: ColorsConst.instance.blue,
-                          )
-                        ],
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CustomText(
+                        text: "ADD",
+                        fontWeight: FontWeight.bold,
+                        textSize: ConstSize.instance.textLarge,
                       ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider();
-                  },
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const CustomText(text: "Add new visitor"),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomGradientButton(
+                        onPressed: () {},
+                        child: const CustomText(
+                          text: "ADD NEW VISITOR",
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CustomText(
+                        text: "TODAY'S VISITORS",
+                        fontWeight: FontWeight.bold,
+                        textSize: ConstSize.instance.textLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const CustomText(
+                          text: "Today's total number of visitors"),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomGradientButton(
+                        onPressed: () {},
+                        child: const CustomText(
+                          text: "VIEW TODAY'S VISITORS",
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CustomText(
+                        text: "TOTAL VISITORS",
+                        fontWeight: FontWeight.bold,
+                        textSize: ConstSize.instance.textLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const CustomText(text: "Total number of visitors"),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomGradientButton(
+                        onPressed: () {},
+                        child: const CustomText(
+                          text: "VIEW TOTAL VISITORS",
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],

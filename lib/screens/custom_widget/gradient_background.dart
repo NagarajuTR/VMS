@@ -3,7 +3,8 @@ import 'package:visitors_management/const/colors_const.dart';
 
 class GradientBackground extends StatefulWidget {
   final Widget child;
-  const GradientBackground({super.key, required this.child});
+  final List<Color>? colors;
+  const GradientBackground({super.key, required this.child, this.colors});
 
   @override
   State<StatefulWidget> createState() => GradientBackgroundState();
@@ -17,7 +18,8 @@ class GradientBackgroundState extends State<GradientBackground> {
           gradient: LinearGradient(
         begin: Alignment.bottomLeft,
         end: Alignment.topRight,
-        colors: [ColorsConst.instance.blue, ColorsConst.instance.pink],
+        colors: widget.colors ??
+            [ColorsConst.instance.blue, ColorsConst.instance.pink],
       )),
       height: double.infinity,
       width: double.infinity,
