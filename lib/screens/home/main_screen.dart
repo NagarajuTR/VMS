@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/dashboard/dashboard.dart';
-import 'package:visitors_management/screens/employees/employees.dart';
+import 'package:visitors_management/screens/employees/employees_home.dart';
 import 'package:visitors_management/screens/settings/settings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const Employees(),
+            builder: (context) => const EmployeesHome(),
           ),
         );
         break;
