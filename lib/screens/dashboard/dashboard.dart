@@ -4,6 +4,7 @@ import 'package:visitors_management/screens/custom_widget/custom_grdient_button.
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
+import 'package:visitors_management/screens/visitors/add_visitor.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -50,7 +51,14 @@ class _Dashboard extends State<Dashboard> {
                         height: 10,
                       ),
                       CustomGradientButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddVisitor(),
+                            ),
+                          );
+                        },
                         child: const CustomText(
                           text: "ADD NEW VISITOR",
                           color: Colors.white,

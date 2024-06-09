@@ -143,6 +143,8 @@ class CustomTextFormField extends StatelessWidget {
         decoration: InputDecoration(
           alignLabelWithHint: alignLabelWithHint,
           labelText: label,
+          labelStyle: hintTextStyle ??
+              TextStyle(color: ColorsConst.instance.black, fontSize: 16),
           hintText: hintText,
           hintStyle:
               hintTextStyle ?? TextStyle(color: ColorsConst.instance.gray),
