@@ -80,7 +80,7 @@ class _Dashboard extends State<EmployeesHome> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       CustomText(
-                        text: "VIEW ALL VISITORS",
+                        text: "VIEW ALL EMPLOYEES",
                         fontWeight: FontWeight.bold,
                         textSize: ConstSize.instance.textLarge,
                       ),

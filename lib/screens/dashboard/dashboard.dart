@@ -3,6 +3,7 @@ import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
+import 'package:visitors_management/screens/dashboard/visitors_list.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 import 'package:visitors_management/screens/visitors/add_visitor.dart';
 
@@ -69,7 +70,7 @@ class _Dashboard extends State<Dashboard> {
                   ),
                 ),
               ),
-              const SizedBox(
+              /*const SizedBox(
                 height: 5,
               ),
               Card(
@@ -102,7 +103,7 @@ class _Dashboard extends State<Dashboard> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
               const SizedBox(
                 height: 5,
               ),
@@ -125,7 +126,14 @@ class _Dashboard extends State<Dashboard> {
                         height: 10,
                       ),
                       CustomGradientButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const VisitorsList(),
+                            ),
+                          );
+                        },
                         child: const CustomText(
                           text: "VIEW TOTAL VISITORS",
                           color: Colors.white,
