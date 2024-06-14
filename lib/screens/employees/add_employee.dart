@@ -255,7 +255,6 @@ class _AddVisitor extends State<AddEmployee> {
                   InkWell(
                     onTap: () async {
                       await _onImageButtonPressed(ImageSource.camera, context);
-                      Navigator.of(context).pop();
                     },
                     child: Container(
                       height: 100,
@@ -286,7 +285,6 @@ class _AddVisitor extends State<AddEmployee> {
                   InkWell(
                     onTap: () async {
                       await _onImageButtonPressed(ImageSource.gallery, context);
-                      Navigator.of(context).pop();
                     },
                     child: Container(
                       height: 100,
@@ -331,6 +329,7 @@ class _AddVisitor extends State<AddEmployee> {
         setState(() {
           imageFile = pickedFile;
         });
+        Navigator.of(context).pop();
       } catch (e) {}
     }
   }

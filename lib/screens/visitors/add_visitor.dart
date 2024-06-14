@@ -1,13 +1,17 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
+import 'package:visitors_management/screens/dashboard/visitors_list.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
+
+import '../dashboard/dashboard.dart';
 
 class AddVisitor extends StatefulWidget {
   const AddVisitor({super.key});
@@ -20,6 +24,17 @@ class _AddVisitor extends State<AddVisitor> {
   final _formKey = GlobalKey<FormState>();
   XFile? imageFile;
   final ImagePicker _picker = ImagePicker();
+
+  CollectionReference visitors =
+      FirebaseFirestore.instance.collection('visitors');
+
+  String name = "";
+  String email = "";
+  String phone = "";
+  String company = "";
+  String purpose = "";
+  String belongings = "";
+  String visitTime = "";
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +56,7 @@ class _AddVisitor extends State<AddVisitor> {
             child: Column(
               children: <Widget>[
                 InkWell(
-                  onTap: () async {
-                    // getImageFromGallery();
+                  onTap: () {
                     showPickerBottomSheet();
                   },
                   child: Container(
@@ -58,26 +72,10 @@ class _AddVisitor extends State<AddVisitor> {
                                 File(imageFile?.path ?? ''),
                                 fit: BoxFit.cover,
                               )
-                            : CachedNetworkImage(
-                                imageUrl: "http://via.placeholder.com/350x150",
-                                placeholder: (context, url) =>
-                                    const CircleAvatar(
-                                  backgroundColor: Colors.white30,
-                                ),
-                                errorWidget: (context, url, error) => Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: Image.asset(
-                                    'assets/images/noImage.png',
-                                    height: 110,
-                                    // width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                imageBuilder: (context, image) => Image(
-                                  image: image,
-                                  height: 110,
-                                  fit: BoxFit.fitWidth,
-                                ),
+                            : const Icon(
+                                Icons.person,
+                                size: 100,
+                                color: Colors.white,
                               ),
                       ),
                     ),
@@ -91,8 +89,14 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Enter name",
                       hintText: "Enter name",
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        name = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Name can\'t be empty'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -104,8 +108,22 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Enter email",
                       hintText: "Enter email",
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        email = value;
+                      },
+                      validator: (value) {
+                        if ((value ?? '').isEmpty) {
+                          return 'Email can\'t be empty';
+                        }
+
+                        if (!RegExp(
+                                r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            .hasMatch(value ?? "")) {
+                          return "Enter valid email";
+                        }
+
+                        return null;
+                      },
                     ),
                   ],
                 ),
@@ -118,7 +136,21 @@ class _AddVisitor extends State<AddVisitor> {
                       label: "Enter phone number",
                       hintText: "Enter phone number",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        phone = value;
+                      },
+                      validator: (value) {
+                        if ((value ?? '').isEmpty) {
+                          return 'Phone number can\'t be empty';
+                        }
+
+                        if (!RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)')
+                            .hasMatch(value ?? "")) {
+                          return "Enter valid phone number";
+                        }
+
+                        return null;
+                      },
                     ),
                   ],
                 ),
@@ -131,7 +163,14 @@ class _AddVisitor extends State<AddVisitor> {
                       label: "Enter company name",
                       hintText: "Enter company name",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        company = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Company name can\'t be empty'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -144,7 +183,14 @@ class _AddVisitor extends State<AddVisitor> {
                       label: "Purpose of visit",
                       hintText: "Purpose of visit",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        purpose = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Enter purpose of visit'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -157,7 +203,14 @@ class _AddVisitor extends State<AddVisitor> {
                       label: "Belongings",
                       hintText: "Belongings",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        belongings = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Enter belongings'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -170,7 +223,14 @@ class _AddVisitor extends State<AddVisitor> {
                       label: "Visit time",
                       hintText: "Visit time",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        visitTime = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Enter visit time'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -179,12 +239,7 @@ class _AddVisitor extends State<AddVisitor> {
                 ),
                 CustomGradientButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddVisitor(),
-                      ),
-                    );
+                    saveVisitorData();
                   },
                   child: const CustomText(
                     text: "SAVE",
@@ -299,7 +354,119 @@ class _AddVisitor extends State<AddVisitor> {
         setState(() {
           imageFile = pickedFile;
         });
+        Navigator.of(context).pop();
       } catch (e) {}
+    }
+  }
+
+  saveVisitorData() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+
+        String imageName =
+            "visitor_${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+        if (imageFile == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please select profile image')),
+          );
+          return;
+        } else {
+          final file = File(imageFile?.path ?? '');
+
+          final metadata = SettableMetadata(contentType: "image/jpeg");
+
+          final storageRef = FirebaseStorage.instance.ref();
+
+          final uploadTask =
+              storageRef.child("images/$imageName").putFile(file, metadata);
+
+          uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+            switch (taskSnapshot.state) {
+              case TaskState.running:
+                final progress = 100.0 *
+                    (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+                print("Upload is $progress% complete.");
+                break;
+              case TaskState.paused:
+                print("Upload is paused.");
+                break;
+              case TaskState.canceled:
+                print("Upload was canceled");
+                break;
+              case TaskState.error:
+                // Handle unsuccessful uploads
+                break;
+              case TaskState.success:
+                // Handle successful uploads on complete
+                // ...
+                break;
+            }
+          });
+        }
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Dialog(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: CustomText(
+                          text: "Processing...",
+                          textSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+
+        await visitors.add({
+          'name': name, // John Doe
+          'email': email, // Stokes and Sons
+          'phone': phone,
+          'company': company,
+          'purpose': purpose,
+          'belongings': belongings,
+          'visitTime': visitTime
+        });
+
+        _formKey.currentState?.reset();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Visitor data saved successfully..!')),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VisitorsList(),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Something went wrong. Please try again later..!')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Dashboard(),
+        ),
+      );
     }
   }
 }
