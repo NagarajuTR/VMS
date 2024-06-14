@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "25589446958",
+    "project_id": "vmsp-b1e74",
+    "storage_bucket": "vmsp-b1e74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25589446958:android:631c158215fb8f6b77a2bf",
+        "android_client_info": {
+          "package_name": "com.example.visitors_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX2IqaodmRZPsD7dCICuqBVoJY_RI7ajw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

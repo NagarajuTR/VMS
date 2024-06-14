@@ -1,12 +1,15 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
+import 'package:visitors_management/screens/employees/employees.dart';
+import 'package:visitors_management/screens/employees/employees_home.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
 class AddEmployee extends StatefulWidget {
@@ -20,6 +23,16 @@ class _AddVisitor extends State<AddEmployee> {
   final _formKey = GlobalKey<FormState>();
   XFile? imageFile;
   final ImagePicker _picker = ImagePicker();
+
+  CollectionReference employees =
+      FirebaseFirestore.instance.collection('employees');
+
+  String name = "";
+  String email = "";
+  String phone = "";
+  String designation = "";
+  String password = "";
+  String employeeId = "";
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +55,7 @@ class _AddVisitor extends State<AddEmployee> {
               children: <Widget>[
                 InkWell(
                   onTap: () async {
-                    showPickerBottomSheet();
+                    await showPickerBottomSheet();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -57,26 +70,10 @@ class _AddVisitor extends State<AddEmployee> {
                                 File(imageFile?.path ?? ''),
                                 fit: BoxFit.cover,
                               )
-                            : CachedNetworkImage(
-                                imageUrl: "http://via.placeholder.com/350x150",
-                                placeholder: (context, url) =>
-                                    const CircleAvatar(
-                                  backgroundColor: Colors.white30,
-                                ),
-                                errorWidget: (context, url, error) => Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: Image.asset(
-                                    'assets/images/noImage.png',
-                                    height: 110,
-                                    // width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                imageBuilder: (context, image) => Image(
-                                  image: image,
-                                  height: 110,
-                                  fit: BoxFit.fitWidth,
-                                ),
+                            : const Icon(
+                                Icons.person,
+                                size: 100,
+                                color: Colors.white,
                               ),
                       ),
                     ),
@@ -90,8 +87,33 @@ class _AddVisitor extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Enter name",
                       hintText: "Enter name",
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        name = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Name can\'t be empty'
+                            : null;
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    CustomTextFormField(
+                      label: "Employee id",
+                      hintText: "Employee id",
+                      onChanged: (value) {
+                        employeeId = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Employee id can\'t be empty'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -103,8 +125,22 @@ class _AddVisitor extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Enter email",
                       hintText: "Enter email",
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        email = value;
+                      },
+                      validator: (value) {
+                        if ((value ?? '').isEmpty) {
+                          return 'Email can\'t be empty';
+                        }
+
+                        if (!RegExp(
+                                r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            .hasMatch(value ?? "")) {
+                          return "Enter valid email";
+                        }
+
+                        return null;
+                      },
                     ),
                   ],
                 ),
@@ -117,7 +153,21 @@ class _AddVisitor extends State<AddEmployee> {
                       label: "Enter phone number",
                       hintText: "Enter phone number",
                       keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        phone = value;
+                      },
+                      validator: (value) {
+                        if ((value ?? '').isEmpty) {
+                          return 'Phone number can\'t be empty';
+                        }
+
+                        if (!RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)')
+                            .hasMatch(value ?? "")) {
+                          return "Enter valid phone number";
+                        }
+
+                        return null;
+                      },
                     ),
                   ],
                 ),
@@ -129,8 +179,33 @@ class _AddVisitor extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Designation",
                       hintText: "Designation",
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        designation = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Designation can\'t be empty'
+                            : null;
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    CustomTextFormField(
+                      label: "Set password",
+                      hintText: "Set password",
+                      onChanged: (value) {
+                        password = value;
+                      },
+                      validator: (value) {
+                        return (value ?? '').isEmpty
+                            ? 'Password can\'t be empty'
+                            : null;
+                      },
                     ),
                   ],
                 ),
@@ -138,7 +213,9 @@ class _AddVisitor extends State<AddEmployee> {
                   height: 20,
                 ),
                 CustomGradientButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    saveEmployeeData();
+                  },
                   child: const CustomText(
                     text: "SAVE",
                     color: Colors.white,
@@ -153,8 +230,8 @@ class _AddVisitor extends State<AddEmployee> {
     );
   }
 
-  void showPickerBottomSheet() {
-    showModalBottomSheet<void>(
+  Future<void> showPickerBottomSheet() async {
+    await showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -176,8 +253,9 @@ class _AddVisitor extends State<AddEmployee> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    onTap: () {
-                      _onImageButtonPressed(ImageSource.camera, context);
+                    onTap: () async {
+                      await _onImageButtonPressed(ImageSource.camera, context);
+                      Navigator.of(context).pop();
                     },
                     child: Container(
                       height: 100,
@@ -206,8 +284,9 @@ class _AddVisitor extends State<AddEmployee> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      _onImageButtonPressed(ImageSource.gallery, context);
+                    onTap: () async {
+                      await _onImageButtonPressed(ImageSource.gallery, context);
+                      Navigator.of(context).pop();
                     },
                     child: Container(
                       height: 100,
@@ -253,6 +332,117 @@ class _AddVisitor extends State<AddEmployee> {
           imageFile = pickedFile;
         });
       } catch (e) {}
+    }
+  }
+
+  saveEmployeeData() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState?.save();
+
+        String imageName =
+            "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+        if (imageFile == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please select profile image')),
+          );
+          return;
+        } else {
+          final file = File(imageFile?.path ?? '');
+
+          final metadata = SettableMetadata(contentType: "image/jpeg");
+
+          final storageRef = FirebaseStorage.instance.ref();
+
+          final uploadTask =
+              storageRef.child("images/$imageName").putFile(file, metadata);
+
+          uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+            switch (taskSnapshot.state) {
+              case TaskState.running:
+                final progress = 100.0 *
+                    (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+                print("Upload is $progress% complete.");
+                break;
+              case TaskState.paused:
+                print("Upload is paused.");
+                break;
+              case TaskState.canceled:
+                print("Upload was canceled");
+                break;
+              case TaskState.error:
+                // Handle unsuccessful uploads
+                break;
+              case TaskState.success:
+                // Handle successful uploads on complete
+                // ...
+                break;
+            }
+          });
+        }
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Dialog(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: CustomText(
+                          text: "Processing...",
+                          textSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+
+        await employees.add({
+          'name': name, // John Doe
+          'email': email, // Stokes and Sons
+          'phone': phone,
+          'designation': designation,
+          'password': password,
+          'employeeId': employeeId,
+          'image': imageName
+        });
+
+        _formKey.currentState?.reset();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Employee data saved successfully..!')),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Employees(),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Something went wrong. Please try again later..!')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const EmployeesHome(),
+        ),
+      );
     }
   }
 }
