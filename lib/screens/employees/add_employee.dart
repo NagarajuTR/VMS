@@ -424,6 +424,8 @@ class _AddVisitor extends State<AddEmployee> {
           const SnackBar(content: Text('Employee data saved successfully..!')),
         );
 
+        Navigator.of(context).pop();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

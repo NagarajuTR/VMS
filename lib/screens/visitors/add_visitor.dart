@@ -449,6 +449,8 @@ class _AddVisitor extends State<AddVisitor> {
           const SnackBar(content: Text('Visitor data saved successfully..!')),
         );
 
+        Navigator.of(context).pop();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
