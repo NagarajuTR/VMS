@@ -114,14 +114,14 @@ class _Dashboard extends State<Dashboard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       CustomText(
-                        text: "TOTAL VISITORS",
+                        text: "VISITORS",
                         fontWeight: FontWeight.bold,
                         textSize: ConstSize.instance.textLarge,
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      const CustomText(text: "Total number of visitors"),
+                      const CustomText(text: "View all visitors"),
                       const SizedBox(
                         height: 10,
                       ),
@@ -135,7 +135,7 @@ class _Dashboard extends State<Dashboard> {
                           );
                         },
                         child: const CustomText(
-                          text: "VIEW TOTAL VISITORS",
+                          text: "VIEW ALL VISITORS",
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                         ),
