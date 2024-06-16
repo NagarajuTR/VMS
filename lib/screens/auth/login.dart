@@ -167,8 +167,8 @@ class LoginState extends State<Login> {
 
         _formKey.currentState?.reset();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login successfully..!')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Login successful..!')));
       } else {
         if (!mounted) return;
         Navigator.of(context).pop();

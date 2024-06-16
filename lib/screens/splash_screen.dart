@@ -48,13 +48,16 @@ class SplashScreenState extends State<SplashScreen> {
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => const Dashboard()),
-          ModalRoute.withName('/'));
+          ModalRoute.withName(
+            '/',
+          ));
       return;
     }
 
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => const OnboardScreen()));
+            builder: (BuildContext context) => const OnboardScreen()),
+        ModalRoute.withName('/'));
   }
 }
