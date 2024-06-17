@@ -108,7 +108,7 @@ class _Dashboard extends State<Settings> {
                       onTap: () async {
                         final SharedPreferences prefs =
                             await SharedPreferences.getInstance();
-                        prefs.clear();
+                        await prefs.clear();
 
                         if (!mounted) return;
 

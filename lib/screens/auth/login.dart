@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visitors_management/const/colors_const.dart';
+import 'package:visitors_management/model/employee.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/custom_textform_field.dart';
@@ -156,6 +157,8 @@ class LoginState extends State<Login> {
         Map<String, dynamic> employee = employees.docs.first.data();
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("employee", jsonEncode(employee));
+
+        Employee.instance.employee = employee;
 
         if (!mounted) return;
 

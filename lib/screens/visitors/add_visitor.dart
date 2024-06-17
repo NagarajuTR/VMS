@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
@@ -24,6 +25,11 @@ class _AddVisitor extends State<AddVisitor> {
   final _formKey = GlobalKey<FormState>();
   XFile? imageFile;
   final ImagePicker _picker = ImagePicker();
+  final TextEditingController _dateController = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
 
   CollectionReference visitors =
       FirebaseFirestore.instance.collection('visitors');
@@ -214,21 +220,20 @@ class _AddVisitor extends State<AddVisitor> {
                 const SizedBox(
                   height: 15,
                 ),
-                Row(
-                  children: [
-                    CustomTextFormField(
-                      label: "Visit time",
-                      hintText: "Visit time",
-                      onChanged: (value) {
-                        visitTime = value;
-                      },
-                      validator: (value) {
-                        return (value ?? '').isEmpty
-                            ? 'Enter visit time'
-                            : null;
-                      },
-                    ),
-                  ],
+                InkWell(
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: Row(
+                    children: [
+                      CustomTextFormField(
+                        label: "Visit time",
+                        hintText: "Visit time",
+                        controller: _dateController,
+                        enabled: false,
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -357,8 +362,34 @@ class _AddVisitor extends State<AddVisitor> {
 
   saveVisitorData() async {
     try {
-      if (_formKey.currentState!.validate()) {
+      if (_formKey.currentState!.validate() &&
+          _dateController.text.isNotEmpty) {
         _formKey.currentState?.save();
+
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Dialog(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: CustomText(
+                          text: "Processing...",
+                          textSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
 
         String imageName =
             "visitor_${DateTime.now().millisecondsSinceEpoch}.jpg";
@@ -403,33 +434,6 @@ class _AddVisitor extends State<AddVisitor> {
           });
         }
 
-        if (!mounted) return;
-
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const Dialog(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 4.0),
-                      child: CustomText(
-                          text: "Processing...",
-                          textSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-
         await visitors.add({
           'name': name, // John Doe
           'email': email, // Stokes and Sons
@@ -437,7 +441,7 @@ class _AddVisitor extends State<AddVisitor> {
           'company': company,
           'purpose': purpose,
           'belongings': belongings,
-          'visitTime': visitTime,
+          'visitTime': _dateController.text,
           'imageUrl': imageUrl
         });
 
@@ -469,6 +473,40 @@ class _AddVisitor extends State<AddVisitor> {
           builder: (context) => const Dashboard(),
         ),
       );
+    }
+  }
+
+  String date = "";
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        _selectTime(context);
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null) {
+      setState(() {
+        selectedTime = picked;
+        _dateController.text = DateFormat("yyyy-MM-dd hh:mm a").format(DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute));
+      });
     }
   }
 }
