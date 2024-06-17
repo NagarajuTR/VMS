@@ -34,7 +34,6 @@ class LoginState extends State<Login> {
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(
@@ -45,6 +44,7 @@ class LoginState extends State<Login> {
                   textSize: 24,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(
                   height: 15,

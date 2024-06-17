@@ -366,31 +366,6 @@ class _AddVisitor extends State<AddVisitor> {
           _dateController.text.isNotEmpty) {
         _formKey.currentState?.save();
 
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return const Dialog(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 4.0),
-                      child: CustomText(
-                          text: "Processing...",
-                          textSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-
         String imageName =
             "visitor_${DateTime.now().millisecondsSinceEpoch}.jpg";
         String imageUrl = "";
@@ -401,6 +376,30 @@ class _AddVisitor extends State<AddVisitor> {
           );
           return;
         } else {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Dialog(
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: CustomText(
+                            text: "Processing...",
+                            textSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
           final file = File(imageFile?.path ?? '');
 
           Reference ref =
