@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:visitors_management/const/colors_const.dart';
-import 'package:visitors_management/const/constants.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
@@ -79,11 +78,11 @@ class _Dashboard extends State<Employees> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: Constants.instance.imageUrl,
+                                      imageUrl: employee['imageUrl'] ?? "",
                                       imageBuilder: (context, imageProvider) =>
                                           Container(
-                                        width: 100.0,
-                                        height: 100.0,
+                                        width: 80.0,
+                                        height: 80.0,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
@@ -96,7 +95,8 @@ class _Dashboard extends State<Employees> {
                                           CircularProgressIndicator(
                                               value: downloadProgress.progress),
                                       errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                          const Icon(Icons.error,
+                                              size: 80, color: Colors.blueGrey),
                                     ),
                                   ),
                                 ),

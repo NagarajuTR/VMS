@@ -339,48 +339,6 @@ class _AddVisitor extends State<AddEmployee> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState?.save();
 
-        String imageName =
-            "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
-
-        if (imageFile == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please select profile image')),
-          );
-          return;
-        } else {
-          final file = File(imageFile?.path ?? '');
-
-          final metadata = SettableMetadata(contentType: "image/jpeg");
-
-          final storageRef = FirebaseStorage.instance.ref();
-
-          final uploadTask =
-              storageRef.child("images/$imageName").putFile(file, metadata);
-
-          uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-            switch (taskSnapshot.state) {
-              case TaskState.running:
-                final progress = 100.0 *
-                    (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-                print("Upload is $progress% complete.");
-                break;
-              case TaskState.paused:
-                print("Upload is paused.");
-                break;
-              case TaskState.canceled:
-                print("Upload was canceled");
-                break;
-              case TaskState.error:
-                // Handle unsuccessful uploads
-                break;
-              case TaskState.success:
-                // Handle successful uploads on complete
-                // ...
-                break;
-            }
-          });
-        }
-
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -406,6 +364,49 @@ class _AddVisitor extends State<AddEmployee> {
           },
         );
 
+        String imageName =
+            "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
+        String imageUrl = "";
+
+        if (imageFile == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please select profile image')),
+          );
+          return;
+        } else {
+          final file = File(imageFile?.path ?? '');
+
+          Reference ref =
+              FirebaseStorage.instance.ref().child('images').child(imageName);
+          UploadTask uploadTask = ref.putFile(file);
+          final snapshot = await uploadTask.whenComplete(() => null);
+
+          imageUrl = await snapshot.ref.getDownloadURL();
+
+          uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+            switch (taskSnapshot.state) {
+              case TaskState.running:
+                final progress = 100.0 *
+                    (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+                print("Upload is $progress% complete.");
+                break;
+              case TaskState.paused:
+                print("Upload is paused.");
+                break;
+              case TaskState.canceled:
+                print("Upload was canceled");
+                break;
+              case TaskState.error:
+                // Handle unsuccessful uploads
+                break;
+              case TaskState.success:
+                // Handle successful uploads on complete
+                // ...
+                break;
+            }
+          });
+        }
+
         await employees.add({
           'name': name, // John Doe
           'email': email, // Stokes and Sons
@@ -413,7 +414,7 @@ class _AddVisitor extends State<AddEmployee> {
           'designation': designation,
           'password': password,
           'employeeId': employeeId,
-          'image': imageName
+          'imageUrl': imageUrl
         });
 
         _formKey.currentState?.reset();

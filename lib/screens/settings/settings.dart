@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visitors_management/const/colors_const.dart';
+import 'package:visitors_management/model/employee.dart';
 import 'package:visitors_management/screens/auth/login.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
@@ -45,21 +47,45 @@ class _Dashboard extends State<Settings> {
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/png/profile.png',
-                          height: 100,
-                          width: 100,
+                        // Image.asset(
+                        //   'assets/png/profile.png',
+                        //   height: 100,
+                        //   width: 100,
+                        // ),
+
+                        CachedNetworkImage(
+                          imageUrl:
+                              Employee.instance.employee['imageUrl'] ?? "",
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 80.0,
+                            height: 80.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.error,
+                            size: 80,
+                            color: Colors.blueGrey,
+                          ),
                         ),
                         const SizedBox(width: 5),
                         Wrap(
                           direction: Axis.vertical,
                           children: [
                             CustomText(
-                              text: 'Arun yadav',
+                              text:
+                                  '${Employee.instance.employee['name'] ?? ''}',
                               textSize: ConstSize.instance.text24,
                             ),
                             CustomText(
-                              text: 'arunyadav@gmail.com',
+                              text: '${Employee.instance.employee['email']}',
                               textSize: ConstSize.instance.textLarge,
                             )
                           ],

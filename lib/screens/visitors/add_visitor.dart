@@ -162,7 +162,6 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Enter company name",
                       hintText: "Enter company name",
-                      keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         company = value;
                       },
@@ -182,7 +181,6 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Purpose of visit",
                       hintText: "Purpose of visit",
-                      keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         purpose = value;
                       },
@@ -202,7 +200,6 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Belongings",
                       hintText: "Belongings",
-                      keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         belongings = value;
                       },
@@ -222,7 +219,6 @@ class _AddVisitor extends State<AddVisitor> {
                     CustomTextFormField(
                       label: "Visit time",
                       hintText: "Visit time",
-                      keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         visitTime = value;
                       },
@@ -366,6 +362,7 @@ class _AddVisitor extends State<AddVisitor> {
 
         String imageName =
             "visitor_${DateTime.now().millisecondsSinceEpoch}.jpg";
+        String imageUrl = "";
 
         if (imageFile == null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -375,12 +372,12 @@ class _AddVisitor extends State<AddVisitor> {
         } else {
           final file = File(imageFile?.path ?? '');
 
-          final metadata = SettableMetadata(contentType: "image/jpeg");
+          Reference ref =
+              FirebaseStorage.instance.ref().child('images').child(imageName);
+          UploadTask uploadTask = ref.putFile(file);
+          final snapshot = await uploadTask.whenComplete(() => null);
 
-          final storageRef = FirebaseStorage.instance.ref();
-
-          final uploadTask =
-              storageRef.child("images/$imageName").putFile(file, metadata);
+          imageUrl = await snapshot.ref.getDownloadURL();
 
           uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
             switch (taskSnapshot.state) {
@@ -405,6 +402,8 @@ class _AddVisitor extends State<AddVisitor> {
             }
           });
         }
+
+        if (!mounted) return;
 
         showDialog(
           context: context,
@@ -438,7 +437,8 @@ class _AddVisitor extends State<AddVisitor> {
           'company': company,
           'purpose': purpose,
           'belongings': belongings,
-          'visitTime': visitTime
+          'visitTime': visitTime,
+          'imageUrl': imageUrl
         });
 
         _formKey.currentState?.reset();
