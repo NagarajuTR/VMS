@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
@@ -51,161 +52,171 @@ class _VisitorDetailsState extends State<VisitorDetails> {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                           value: downloadProgress.progress),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.error, size: 80, color: Colors.blueGrey),
+                  errorWidget: (context, url, error) => const Icon(Icons.error,
+                      size: 150, color: Colors.blueGrey),
                 ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Name: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Name: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: "${widget.visitor['name'] ?? ""}",
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Email: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: "${widget.visitor['email'] ?? ""}",
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Phone number: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: "${widget.visitor['phone'] ?? ""}",
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Purpose of visit: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: "${widget.visitor['purpose'] ?? ""}",
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Belongings: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: "${widget.visitor['belongings'] ?? ""}",
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
+                          child: CustomText(
+                            text: "Visit time: ",
+                            textAlign: TextAlign.end,
+                            textSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: CustomText(
+                            text: DateFormat('yyyy-MM-dd / hh:mm a').format(
+                                (widget.visitor['visitTime'] ?? "").toDate()),
+                            textSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['name'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Email: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['email'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Phone number: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['phone'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Purpose of visit: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['purpose'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Belongings: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['belongings'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Expanded(
-                  flex: 2,
-                  child: CustomText(
-                    text: "Visit time: ",
-                    textAlign: TextAlign.end,
-                    textSize: 16,
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: CustomText(
-                    text: "${widget.visitor['visitTime'] ?? ""}",
-                    textSize: 16,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            )
           ],
         ),
       ),
