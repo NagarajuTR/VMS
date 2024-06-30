@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/model/employee.dart';
+import 'package:visitors_management/provider/bottomnav_index.dart';
 import 'package:visitors_management/screens/auth/login.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
@@ -21,6 +23,8 @@ class _Dashboard extends State<Settings> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
+        Provider.of<BottomNavIndex>(context, listen: false)
+            .changeIndex(selectedIndex: 0);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const Dashboard()),

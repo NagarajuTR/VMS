@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:visitors_management/const/colors_const.dart';
+import 'package:visitors_management/provider/bottomnav_index.dart';
 import 'package:visitors_management/screens/dashboard/dashboard.dart';
 import 'package:visitors_management/screens/employees/employees_home.dart';
 import 'package:visitors_management/screens/settings/settings.dart';
@@ -19,8 +21,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  static int? currentPageIndex;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +34,8 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         indicatorColor: ColorsConst.instance.blue,
-        selectedIndex: currentPageIndex ?? 0,
+        selectedIndex:
+            Provider.of<BottomNavIndex>(context, listen: true).selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(
@@ -66,8 +67,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void switchScreen(int index) {
-    currentPageIndex = index;
-    switch (currentPageIndex) {
+    Provider.of<BottomNavIndex>(context, listen: false)
+        .changeIndex(selectedIndex: index);
+    switch (index) {
       case 0:
         Navigator.push(
           context,
