@@ -404,6 +404,24 @@ class _EditEmployeeState extends State<EditEmployee> {
           },
         );
 
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('employees')
+            .where('phone', isEqualTo: phone)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty &&
+            (querySnapshot.docs.first.data()
+                    as Map<String, dynamic>)['phone'] !=
+                widget.employee['phone'] &&
+            mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Phone number already exists!')),
+          );
+          Navigator.of(context).pop();
+
+          return;
+        }
+
         if (imageFile != null) {
           final file = File(imageFile?.path ?? '');
 
@@ -442,13 +460,14 @@ class _EditEmployeeState extends State<EditEmployee> {
         }
 
         await employees.doc(docId).update({
-          'name': name, // John Doe
-          'email': email, // Stokes and Sons
+          'name': name,
+          'email': email,
           'phone': phone,
           'designation': designation,
           'password': password,
           'employeeId': employeeId,
-          'imageUrl': imageUrl
+          'imageUrl': imageUrl,
+          'updatedAt': Timestamp.now()
         });
 
         _formKey.currentState?.reset();

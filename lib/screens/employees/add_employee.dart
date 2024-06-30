@@ -374,6 +374,20 @@ class _AddEmployee extends State<AddEmployee> {
             },
           );
 
+          QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection('employees')
+              .where('phone', isEqualTo: phone)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Phone number already exists!')),
+            );
+            Navigator.of(context).pop();
+
+            return;
+          }
+
           final file = File(imageFile?.path ?? '');
 
           Reference ref =
@@ -414,7 +428,8 @@ class _AddEmployee extends State<AddEmployee> {
           'designation': designation,
           'password': password,
           'employeeId': employeeId,
-          'imageUrl': imageUrl
+          'imageUrl': imageUrl,
+          'createdAt': Timestamp.now()
         });
 
         _formKey.currentState?.reset();
