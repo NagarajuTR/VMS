@@ -9,6 +9,7 @@ import 'package:visitors_management/screens/auth/login.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
 import 'package:visitors_management/screens/custom_widget/gradient_background.dart';
 import 'package:visitors_management/screens/dashboard/dashboard.dart';
+import 'package:visitors_management/screens/employees/employee_details.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
 class Settings extends StatefulWidget {
@@ -48,67 +49,75 @@ class _Dashboard extends State<Settings> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        text: 'My profile',
-                        textSize: ConstSize.instance.text24,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmployeeDetails(
+                          employee: Employee.instance.employee,
+                        ),
                       ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          // Image.asset(
-                          //   'assets/png/profile.png',
-                          //   height: 100,
-                          //   width: 100,
-                          // ),
-
-                          CachedNetworkImage(
-                            imageUrl:
-                                Employee.instance.employee['imageUrl'] ?? "",
-                            imageBuilder: (context, imageProvider) => Container(
-                              width: 80.0,
-                              height: 80.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
+                    );
+                  },
+                  child: Card(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: 'My profile',
+                          textSize: ConstSize.instance.text24,
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl:
+                                  Employee.instance.employee['imageUrl'] ?? "",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 80.0,
+                                height: 80.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                          value: downloadProgress.progress),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.error,
+                                size: 80,
+                                color: Colors.blueGrey,
                               ),
                             ),
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.error,
-                              size: 80,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          Wrap(
-                            direction: Axis.vertical,
-                            children: [
-                              CustomText(
-                                text:
-                                    '${Employee.instance.employee['name'] ?? ''}',
-                                textSize: ConstSize.instance.text24,
-                              ),
-                              CustomText(
-                                text: '${Employee.instance.employee['email']}',
-                                textSize: ConstSize.instance.textLarge,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
+                            const SizedBox(width: 5),
+                            Wrap(
+                              direction: Axis.vertical,
+                              children: [
+                                CustomText(
+                                  text:
+                                      '${Employee.instance.employee['name'] ?? ''}',
+                                  textSize: ConstSize.instance.text24,
+                                ),
+                                CustomText(
+                                  text:
+                                      '${Employee.instance.employee['email']}',
+                                  textSize: ConstSize.instance.textLarge,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
