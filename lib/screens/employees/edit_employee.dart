@@ -379,11 +379,36 @@ class _EditEmployeeState extends State<EditEmployee> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState?.save();
 
-        String imageName =
-            "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Dialog(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: CustomText(
+                          text: "Processing...",
+                          textSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
 
         if (imageFile != null) {
           final file = File(imageFile?.path ?? '');
+
+          String imageName =
+              "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
 
           Reference ref =
               FirebaseStorage.instance.ref().child('images').child(imageName);
