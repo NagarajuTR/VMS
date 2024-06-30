@@ -440,7 +440,13 @@ class _AddVisitor extends State<AddVisitor> {
           'company': company,
           'purpose': purpose,
           'belongings': belongings,
-          'visitTime': _dateController.text,
+          'visitTime': Timestamp.fromMillisecondsSinceEpoch(DateTime(
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute)
+              .millisecondsSinceEpoch),
           'imageUrl': imageUrl
         });
 

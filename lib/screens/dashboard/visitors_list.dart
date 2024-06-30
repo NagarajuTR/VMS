@@ -7,15 +7,21 @@ import 'package:visitors_management/screens/home/main_screen.dart';
 import 'package:visitors_management/screens/visitors/visitor_details.dart';
 
 class VisitorsList extends StatefulWidget {
-  const VisitorsList({super.key});
+  final bool isTodayList;
+  const VisitorsList({super.key, this.isTodayList = false});
 
   @override
   State<StatefulWidget> createState() => _Dashboard();
 }
 
 class _Dashboard extends State<VisitorsList> {
-  final Stream<QuerySnapshot> _employees =
-      FirebaseFirestore.instance.collection('visitors').snapshots();
+  late final Stream<QuerySnapshot> _employees;
+
+  @override
+  void initState() {
+    _employees = getVisitorsList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,5 +164,21 @@ class _Dashboard extends State<VisitorsList> {
         ),
       ),
     );
+  }
+
+  Stream<QuerySnapshot> getVisitorsList() {
+    if (widget.isTodayList) {
+      DateTime today = DateTime.now();
+      DateTime startOfDay = DateTime(today.year, today.month, today.day);
+      DateTime endOfDay = startOfDay.add(const Duration(days: 1));
+
+      return FirebaseFirestore.instance
+          .collection('visitors')
+          .where('visitTime', isGreaterThanOrEqualTo: startOfDay)
+          .where('visitTime', isLessThan: endOfDay)
+          .snapshots();
+    }
+
+    return FirebaseFirestore.instance.collection('visitors').snapshots();
   }
 }

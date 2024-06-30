@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:visitors_management/const/colors_const.dart';
 import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
@@ -15,6 +18,39 @@ class Dashboard extends StatefulWidget {
 }
 
 class _Dashboard extends State<Dashboard> {
+  int todayVisitors = 0;
+  int totalVisitors = 0;
+  late final StreamSubscription<QuerySnapshot> todayVisitorsSubscription;
+  late final StreamSubscription<QuerySnapshot> totalVisitorsSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime today = DateTime.now();
+    DateTime startOfDay = DateTime(today.year, today.month, today.day);
+    DateTime endOfDay = startOfDay.add(const Duration(days: 1));
+
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('visitors');
+
+    todayVisitorsSubscription = collectionRef
+        .where('visitTime', isGreaterThanOrEqualTo: startOfDay)
+        .where('visitTime', isLessThan: endOfDay)
+        .snapshots()
+        .listen((QuerySnapshot snapshot) {
+      setState(() {
+        todayVisitors = snapshot.docs.length;
+      });
+    });
+
+    totalVisitorsSubscription =
+        collectionRef.snapshots().listen((QuerySnapshot snapshot) {
+      setState(() {
+        totalVisitors = snapshot.docs.length;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MainScreen(
@@ -70,7 +106,7 @@ class _Dashboard extends State<Dashboard> {
                   ),
                 ),
               ),
-              /*const SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Card(
@@ -87,13 +123,22 @@ class _Dashboard extends State<Dashboard> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const CustomText(
-                          text: "Today's total number of visitors"),
+                      CustomText(
+                          text:
+                              "Today's total number of visitors: ${todayVisitors.toString()}"),
                       const SizedBox(
                         height: 10,
                       ),
                       CustomGradientButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const VisitorsList(isTodayList: true),
+                            ),
+                          );
+                        },
                         child: const CustomText(
                           text: "VIEW TODAY'S VISITORS",
                           color: Colors.white,
@@ -103,7 +148,7 @@ class _Dashboard extends State<Dashboard> {
                     ],
                   ),
                 ),
-              ),*/
+              ),
               const SizedBox(
                 height: 5,
               ),
@@ -121,13 +166,15 @@ class _Dashboard extends State<Dashboard> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const CustomText(text: "View all visitors"),
+                      CustomText(
+                          text:
+                              "Total number of visitors: ${totalVisitors.toString()}"),
                       const SizedBox(
                         height: 10,
                       ),
                       CustomGradientButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const VisitorsList(),
