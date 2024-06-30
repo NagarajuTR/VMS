@@ -197,4 +197,11 @@ class _Dashboard extends State<Dashboard> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    todayVisitorsSubscription.cancel();
+    totalVisitorsSubscription.cancel();
+    super.dispose();
+  }
 }
