@@ -55,10 +55,13 @@ class _Dashboard extends State<Employees> {
                     }
 
                     if (snapshot.connectionState == ConnectionState.active) {
-                      List<Map<String, dynamic>?>? documentData = snapshot
-                          .data?.docs
-                          .map((e) => e.data() as Map<String, dynamic>?)
-                          .toList();
+                      List<Map<String, dynamic>?>? documentData =
+                          snapshot.data?.docs.map((emp) {
+                        Map<String, dynamic>? employee =
+                            emp.data() as Map<String, dynamic>?;
+                        employee?['id'] = emp.id;
+                        return employee;
+                      }).toList();
 
                       return ListView.separated(
                         itemCount: documentData?.length ?? 0,

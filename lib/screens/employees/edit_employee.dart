@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,16 @@ import 'package:visitors_management/screens/employees/employees.dart';
 import 'package:visitors_management/screens/employees/employees_home.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
-class AddEmployee extends StatefulWidget {
-  const AddEmployee({super.key});
+class EditEmployee extends StatefulWidget {
+  final Map<String, dynamic> employee;
+
+  const EditEmployee({super.key, required this.employee});
 
   @override
-  State<StatefulWidget> createState() => _AddEmployee();
+  State<StatefulWidget> createState() => _EditEmployeeState();
 }
 
-class _AddEmployee extends State<AddEmployee> {
+class _EditEmployeeState extends State<EditEmployee> {
   final _formKey = GlobalKey<FormState>();
   XFile? imageFile;
   final ImagePicker _picker = ImagePicker();
@@ -33,6 +36,21 @@ class _AddEmployee extends State<AddEmployee> {
   String designation = "";
   String password = "";
   String employeeId = "";
+  String imageUrl = "";
+  String docId = "";
+
+  @override
+  void initState() {
+    name = widget.employee['name'];
+    email = widget.employee['email'];
+    phone = widget.employee['phone'];
+    designation = widget.employee['designation'];
+    password = widget.employee['password'];
+    employeeId = widget.employee['employeeId'];
+    imageUrl = widget.employee['imageUrl'];
+    docId = widget.employee['id'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +88,26 @@ class _AddEmployee extends State<AddEmployee> {
                                 File(imageFile?.path ?? ''),
                                 fit: BoxFit.cover,
                               )
-                            : const Icon(
-                                Icons.person,
-                                size: 100,
-                                color: Colors.white,
+                            : CachedNetworkImage(
+                                imageUrl: widget.employee['imageUrl'] ?? "",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 150.0,
+                                  height: 150.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error,
+                                        size: 150, color: Colors.blueGrey),
                               ),
                       ),
                     ),
@@ -87,6 +121,7 @@ class _AddEmployee extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Enter name",
                       hintText: "Enter name",
+                      initialValue: name,
                       onChanged: (value) {
                         name = value;
                       },
@@ -106,6 +141,7 @@ class _AddEmployee extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Employee id",
                       hintText: "Employee id",
+                      initialValue: employeeId,
                       onChanged: (value) {
                         employeeId = value;
                       },
@@ -125,6 +161,7 @@ class _AddEmployee extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Enter email",
                       hintText: "Enter email",
+                      initialValue: email,
                       onChanged: (value) {
                         email = value;
                       },
@@ -152,6 +189,7 @@ class _AddEmployee extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Enter phone number",
                       hintText: "Enter phone number",
+                      initialValue: phone,
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
                         phone = value;
@@ -179,6 +217,7 @@ class _AddEmployee extends State<AddEmployee> {
                     CustomTextFormField(
                       label: "Designation",
                       hintText: "Designation",
+                      initialValue: designation,
                       onChanged: (value) {
                         designation = value;
                       },
@@ -196,8 +235,9 @@ class _AddEmployee extends State<AddEmployee> {
                 Row(
                   children: [
                     CustomTextFormField(
-                      label: "Set password",
-                      hintText: "Set password",
+                      label: "Password",
+                      hintText: "Password",
+                      initialValue: password,
                       onChanged: (value) {
                         password = value;
                       },
@@ -214,7 +254,7 @@ class _AddEmployee extends State<AddEmployee> {
                 ),
                 CustomGradientButton(
                   onPressed: () {
-                    saveEmployeeData();
+                    editEmployeeData();
                   },
                   child: const CustomText(
                     text: "SAVE",
@@ -334,46 +374,15 @@ class _AddEmployee extends State<AddEmployee> {
     }
   }
 
-  saveEmployeeData() async {
+  editEmployeeData() async {
     try {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState?.save();
 
         String imageName =
             "employee_${DateTime.now().millisecondsSinceEpoch}.jpg";
-        String imageUrl = "";
 
-        if (imageFile == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please select profile image')),
-          );
-          return;
-        } else {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const Dialog(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 4.0),
-                        child: CustomText(
-                            text: "Processing...",
-                            textSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-
+        if (imageFile != null) {
           final file = File(imageFile?.path ?? '');
 
           Reference ref =
@@ -407,7 +416,7 @@ class _AddEmployee extends State<AddEmployee> {
           });
         }
 
-        await employees.add({
+        await employees.doc(docId).update({
           'name': name, // John Doe
           'email': email, // Stokes and Sons
           'phone': phone,

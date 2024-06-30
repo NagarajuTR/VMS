@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:visitors_management/const/colors_const.dart';
+import 'package:visitors_management/model/employee.dart';
+import 'package:visitors_management/screens/custom_widget/custom_grdient_button.dart';
 import 'package:visitors_management/screens/custom_widget/custom_text.dart';
+import 'package:visitors_management/screens/employees/edit_employee.dart';
 import 'package:visitors_management/screens/home/main_screen.dart';
 
 class EmployeeDetails extends StatefulWidget {
@@ -163,8 +166,28 @@ class _EmployeeDetailsState extends State<EmployeeDetails> {
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
+                    Visibility(
+                      visible: Employee.instance.employee['isAdmin'] ?? false,
+                      child: CustomGradientButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditEmployee(
+                                employee: widget.employee,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const CustomText(
+                          text: "EDIT",
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

@@ -27,10 +27,12 @@ class CustomTextFormField extends StatelessWidget {
     this.borderRadius = 20.0,
     this.contentPadding = 12.0,
     this.counterText = "",
+    this.initialValue,
     super.key,
   });
 
   final TextEditingController? controller;
+  final String? initialValue;
 
   final String? label;
 
@@ -114,6 +116,7 @@ class CustomTextFormField extends StatelessWidget {
     return Expanded(
       child: TextFormField(
         controller: controller,
+        initialValue: initialValue,
         validator: validator ??
             (String? value) {
               if ((controller?.text ?? "").trim().length < 4 ||
