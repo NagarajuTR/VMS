@@ -45,12 +45,10 @@ class SplashScreenState extends State<SplashScreen> {
       Employee.instance.employee = jsonDecode(employeeString);
 
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const Dashboard()),
-          ModalRoute.withName(
-            '/',
-          ));
+        context,
+        MaterialPageRoute(builder: (context) => const Dashboard()),
+        (Route<dynamic> route) => false,
+      );
       return;
     }
 
