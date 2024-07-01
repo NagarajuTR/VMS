@@ -154,11 +154,14 @@ class LoginState extends State<Login> {
           .get();
 
       if (employees.docs.isNotEmpty) {
-        Map<String, dynamic> employee = employees.docs.first.data();
+        Map<String, dynamic>? employee =
+            employees.docs.first.data() as Map<String, dynamic>?;
+        employee?['id'] = employees.docs.first.id;
+
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("employee", jsonEncode(employee));
 
-        Employee.instance.employee = employee;
+        Employee.instance.employee = employee ?? {};
 
         if (!mounted) return;
 
